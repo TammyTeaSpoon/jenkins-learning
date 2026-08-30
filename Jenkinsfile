@@ -3,15 +3,24 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Code has been checked out by Jenkins.'
+                sh '''
+                    python3 -m venv .venv
+                    .venv/bin/pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '.venv/bin/pytest'
             }
         }
 
         stage('Run Application') {
             steps {
-                sh 'python3 app.py'
+                sh '.venv/bin/python app.py'
             }
         }
 
